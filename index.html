@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сказки для Максима</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #fdf4e3;
+    color: #4a3726;
+    font-family: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 10% 15%, rgba(224, 117, 45, .08) 0 24%, transparent 24%),
+      radial-gradient(circle at 90% 80%, rgba(95, 143, 78, .09) 0 28%, transparent 28%);
+    background-attachment: fixed;
+  }
+
+  .shelf {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 20px 64px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  header h1 {
+    margin: 0 0 .25em;
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 800;
+    color: #7a4418;
+  }
+
+  header p {
+    margin: 0;
+    font-size: clamp(16px, 2.4vw, 20px);
+    color: #a2907a;
+    font-weight: 700;
+  }
+
+  .books {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+  }
+
+  .book {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(94, 65, 34, .16);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+
+  .book:hover, .book:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 46px rgba(94, 65, 34, .24);
+  }
+
+  .book img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #f6e6c9;
+  }
+
+  .book .meta { padding: 20px 22px 24px; }
+
+  .book .num {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #c79a63;
+  }
+
+  .book h2 {
+    margin: .3em 0 .35em;
+    font-size: clamp(21px, 2.7vw, 26px);
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .book p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.5;
+    color: #8d7860;
+  }
+
+  footer {
+    margin-top: 44px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #a2907a;
+  }
+</style>
+</head>
+<body>
+
+<div class="shelf">
+
+  <header>
+    <h1>Сказки для Максима</h1>
+    <p>Выбери книжку и нажми на неё</p>
+  </header>
+
+  <div class="books">
+
+    <a class="book" href="skazka-1-solnechnyy-kamen/index.html">
+      <img src="skazka-1-solnechnyy-kamen/images/00-cover.png" alt="Обложка: Максим держит светящийся Солнечный камень">
+      <div class="meta">
+        <div class="num">Сказка первая</div>
+        <h2>Максим и Солнечный Камень</h2>
+        <p>Из долины украли камень, который светил всю ночь. Поход за ним мимо спинозавра, спящего тираннозавра и велоцирапторов.</p>
+      </div>
+    </a>
+
+    <a class="book" href="skazka-2-volshebnaya-dolina/index.html">
+      <img src="skazka-2-volshebnaya-dolina/images/00-cover.png" alt="Обложка: Максим играет в мяч с динозаврами на поляне">
+      <div class="meta">
+        <div class="num">Сказка вторая</div>
+        <h2>Максим и Волшебная Долина Динозавров</h2>
+        <p>Сердитый Рекс забрал мяч у малышей. Оказалось, что злость побеждают не силой, а добрыми словами и смекалкой.</p>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    Листать можно кнопками, стрелками на клавиатуре или свайпом на телефоне.<br>
+    Чтобы напечатать книжку, откройте её и нажмите Ctrl/Cmd+P.
+  </footer>
+
+</div>
+
+</body>
+</html>
