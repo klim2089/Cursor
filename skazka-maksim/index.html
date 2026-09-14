@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Максим и Долина Динозавров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf4e3;
+    --cream-deep: #f6e6c9;
+    --ink: #4a3726;
+    --accent: #e0752d;
+    --accent-soft: #fbe3cd;
+    --green: #5f8f4e;
+    --shadow: 0 18px 40px rgba(94, 65, 34, .18);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(224, 117, 45, .07) 0 22%, transparent 22%),
+      radial-gradient(circle at 88% 78%, rgba(95, 143, 78, .08) 0 26%, transparent 26%);
+    background-attachment: fixed;
+  }
+
+  .book {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 18px 16px 120px;
+  }
+
+  .page {
+    display: none;
+    animation: fade .35s ease;
+  }
+  .page.is-active { display: block; }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--cream-deep);
+  }
+
+  .text {
+    padding: 26px 28px 30px;
+    font-size: clamp(20px, 2.9vw, 27px);
+    line-height: 1.55;
+  }
+
+  .text p { margin: 0 0 .7em; }
+  .text p:last-child { margin-bottom: 0; }
+
+  /* Строчки, которые малыш быстро запоминает и договаривает сам. */
+  .refrain {
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .boom {
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: .02em;
+  }
+
+  .page-num {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 15px;
+    color: #a2907a;
+    letter-spacing: .08em;
+  }
+
+  /* --- Обложка --- */
+  .cover .card { position: relative; }
+
+  .cover-title {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 5% 8% 0;
+    text-align: center;
+    text-shadow: 0 2px 14px rgba(255, 244, 222, .85), 0 1px 3px rgba(255, 244, 222, 1);
+  }
+
+  .cover-title h1 {
+    margin: 0;
+    font-size: clamp(30px, 6.2vw, 58px);
+    font-weight: 800;
+    line-height: 1.08;
+    color: #7a4418;
+  }
+
+  .cover-title .for-whom {
+    margin-top: .5em;
+    font-size: clamp(15px, 2.4vw, 22px);
+    font-weight: 700;
+    color: #a0643a;
+  }
+
+  /* --- Финальная страница --- */
+  .the-end {
+    text-align: center;
+    padding: 48px 28px 52px;
+  }
+  .the-end h2 {
+    font-size: clamp(30px, 5.5vw, 46px);
+    margin: 0 0 .3em;
+    color: var(--accent);
+  }
+  .the-end p {
+    font-size: clamp(18px, 2.5vw, 23px);
+    margin: 0;
+    color: #8d7860;
+  }
+
+  /* --- Навигация --- */
+  .nav {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--cream) 62%, rgba(253, 244, 227, 0));
+  }
+
+  .nav button {
+    font: inherit;
+    font-weight: 800;
+    font-size: 19px;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 999px;
+    padding: 15px 30px;
+    min-width: 128px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #b85c1d;
+    transition: transform .08s ease, box-shadow .08s ease;
+    touch-action: manipulation;
+  }
+  .nav button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #b85c1d;
+  }
+  .nav button:disabled {
+    background: #e4d6c1;
+    box-shadow: 0 6px 0 #d3c2a9;
+    color: #fff;
+    cursor: default;
+  }
+
+  .counter {
+    font-weight: 700;
+    color: #a2907a;
+    min-width: 62px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 480px) {
+    .text { padding: 20px 20px 24px; }
+    .nav button { padding: 14px 20px; min-width: 104px; font-size: 17px; }
+  }
+
+  /* --- Печать: все страницы подряд, по одной на лист --- */
+  @media print {
+    .nav, .page-num { display: none !important; }
+    body { background: #fff; }
+    .book { max-width: none; padding: 0; }
+    .page {
+      display: block !important;
+      page-break-after: always;
+      break-after: page;
+      animation: none;
+    }
+    .card { box-shadow: none; border-radius: 0; }
+    .text { font-size: 20pt; }
+  }
+</style>
+</head>
+<body>
+
+<div class="book" id="book">
+
+  <section class="page cover is-active">
+    <div class="card">
+      <img src="images/00-cover.png" alt="Максим едет верхом на стегозавре по долине динозавров">
+      <div class="cover-title">
+        <h1>Максим<br>и Долина Динозавров</h1>
+        <div class="for-whom">сказка для Максима</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/01-bedroom.png" alt="Максим играет с динозаврами на ковре перед сном">
+      <div class="text">
+        <p>Жил-был мальчик Максим.</p>
+        <p>Максим очень любил динозавров.</p>
+        <p>А больше всех — Шипастика. У Шипастика на спине жёлтые пластинки.</p>
+        <p>Каждый вечер Максим клал Шипастика рядом с подушкой.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/02-knock.png" alt="Ночью Максим свесил голову с кровати и увидел светящегося стегозавра">
+      <div class="text">
+        <p>Ночью Максим услышал:</p>
+        <p><span class="boom">— Тук. Тук-тук.</span></p>
+        <p>Максим свесил голову с кровати. Под кроватью стоял Шипастик. Живой! А пластинки светились, как ночник.</p>
+        <p>— Максим, пойдём! Нам нужна помощь.</p>
+        <p><span class="refrain">— Я помогу! — сказал Максим.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/03-slide.png" alt="Максим и стегозавр съезжают вниз по волшебному туннелю">
+      <div class="text">
+        <p>Под кроватью была дырка. Большая-пребольшая.</p>
+        <p>Как горка!</p>
+        <p><span class="boom">— У-у-у-ух!</span></p>
+        <p>И Максим поехал вниз.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/04-valley.png" alt="Максим в долине динозавров, рядом огромный стегозавр и длинношеий динозавр">
+      <div class="text">
+        <p>Трава тут была выше Максима. Небо — жёлтое, как абрикос.</p>
+        <p>А Шипастик стал огро-о-омный!</p>
+        <p>Длинношеий динозавр наклонил к Максиму голову:</p>
+        <p>— Здравствуй. Я Долговяз.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/05-babies.png" alt="Маленькие динозаврики грустно сидят на сухой земле, Максим гладит одного">
+      <div class="text">
+        <p>— У нас пропала речка, — вздохнул Долговяз. — Совсем-совсем. А малыши хотят пить.</p>
+        <p>Максим посмотрел. Речки не было. Только сухие камни.</p>
+        <p>А малыши сидели грустные-прегрустные.</p>
+        <p><span class="refrain">— Я помогу! — сказал Максим.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/06-canyon.png" alt="Максим идёт один по узкому ущелью с синим фонариком">
+      <div class="text">
+        <p>Речка убежала в ущелье. В узкое-узкое.</p>
+        <p>Большие туда не пролезут. А Максим пролезет!</p>
+        <p>Максим взял свой синий фонарик и пошёл.</p>
+        <p><span class="boom">Топ. Топ. Топ.</span></p>
+        <p>Было темно. Но фонарик светил.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/07-pyatnysh.png" alt="Максим сидит рядом с плачущим зелёным динозавриком у завала из брёвен">
+      <div class="text">
+        <p>И вдруг Максим услышал: <span class="boom">«Ы-ы-ы-ы...»</span></p>
+        <p>Кто-то плакал!</p>
+        <p>Это был маленький динозаврик. Зелёный, в жёлтых пятнышках.</p>
+        <p>— Я Пятныш. Я толкал камушек... а он толкнул бревно... и речка застряла!</p>
+        <p>— Не плачь, — сказал Максим. — Сейчас починим.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/08-heave.png" alt="Максим висит на палке-рычаге, а динозаврик толкает бревно носом">
+      <div class="text">
+        <p>Максим взял длинную палку. Подложил круглый камень.</p>
+        <p><span class="refrain">— Раз-два — ВЗЯЛИ!</span></p>
+        <p>Максим тянул. Пятныш толкал носом.</p>
+        <p><span class="refrain">— Раз-два — ВЗЯЛИ!</span></p>
+        <p>И бревно — <span class="boom">кряк!</span> — поехало.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/09-water.png" alt="Вернувшаяся река, все динозавры и Максим плещутся в воде">
+      <div class="text">
+        <p>И тут...</p>
+        <p><span class="boom">БУЛЬ! ЖУРЧ! ПЛЮХ!</span></p>
+        <p>Речка вернулась!</p>
+        <p>Малыши пили и плюхались. Долговяз набрал полный рот воды и — <span class="boom">пш-ш-ш-ш!</span> — брызнул прямо на Максима.</p>
+        <p>Все смеялись.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/10-pebble.png" alt="Утро, Максим в кроватке в кроссовках, на подушке пятнистый камешек">
+      <div class="text">
+        <p>Шипастик отнёс Максима домой на спине.</p>
+        <p>Утром мама сказала:</p>
+        <p>— Максим, ты почему спишь в кроссовках?</p>
+        <p>А на подушке лежал маленький гладкий камешек. В жёлтых пятнышках.</p>
+        <p>Максим улыбнулся. Он знал: ночью опять постучат.</p>
+        <p><span class="boom">Тук. Тук-тук.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <div class="the-end">
+        <h2>Конец</h2>
+        <p>Спокойной ночи, Максим!</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<nav class="nav">
+  <button id="prev" type="button">Назад</button>
+  <span class="counter" id="counter"></span>
+  <button id="next" type="button">Дальше</button>
+</nav>
+
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const counter = document.getElementById('counter');
+  let current = 0;
+
+  function show(index) {
+    current = Math.max(0, Math.min(index, pages.length - 1));
+    pages.forEach((page, i) => page.classList.toggle('is-active', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === pages.length - 1;
+    counter.textContent = current + ' / ' + (pages.length - 1);
+    window.scrollTo({ top: 0, behavior: 'instant' in document.documentElement.style ? 'instant' : 'auto' });
+    if (location.hash !== '#' + current) {
+      history.replaceState(null, '', '#' + current);
+    }
+  }
+
+  prevBtn.addEventListener('click', () => show(current - 1));
+  nextBtn.addEventListener('click', () => show(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(current - 1); }
+  });
+
+  let touchStartX = null;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) { show(current + (dx < 0 ? 1 : -1)); }
+    touchStartX = null;
+  }, { passive: true });
+
+  const fromHash = parseInt(location.hash.slice(1), 10);
+  show(Number.isInteger(fromHash) ? fromHash : 0);
+</script>
+
+</body>
+</html>
