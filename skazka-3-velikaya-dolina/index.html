@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Максим и малыш Чомпер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #eef5f7;
+    --cream-deep: #d9e8ec;
+    --ink: #2f4249;
+    --accent: #2f8ba8;
+    --accent-dark: #256f87;
+    --warm: #d9772c;
+    --shadow: 0 18px 40px rgba(47, 66, 73, .18);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(47, 139, 168, .08) 0 22%, transparent 22%),
+      radial-gradient(circle at 88% 78%, rgba(217, 119, 44, .07) 0 26%, transparent 26%);
+    background-attachment: fixed;
+  }
+
+  .book {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 18px 16px 120px;
+  }
+
+  .page {
+    display: none;
+    animation: fade .35s ease;
+  }
+  .page.is-active { display: block; }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--cream-deep);
+  }
+
+  .text {
+    padding: 26px 28px 30px;
+    font-size: clamp(20px, 2.9vw, 27px);
+    line-height: 1.55;
+  }
+
+  .text p { margin: 0 0 .7em; }
+  .text p:last-child { margin-bottom: 0; }
+
+  /* Строчка «Я уже большой!» повторяется трижды и ломается на странице 11. */
+  .refrain {
+    color: var(--warm);
+    font-weight: 800;
+  }
+
+  /* Перелом истории — читать громко, во весь голос. */
+  .turn {
+    display: block;
+    color: var(--warm);
+    font-weight: 800;
+    font-size: 1.16em;
+    line-height: 1.35;
+  }
+
+  /* Тут можно кричать и считать вместе с ребёнком. */
+  .shout {
+    color: var(--accent-dark);
+    font-weight: 800;
+    letter-spacing: .02em;
+  }
+
+  .boom {
+    font-weight: 800;
+    color: var(--accent-dark);
+    letter-spacing: .02em;
+  }
+
+  /* --- Обложка (светлое небо, поэтому заголовок тёмный) --- */
+  .cover .card { position: relative; }
+
+  .cover-title {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 4% 8% 0;
+    text-align: center;
+    text-shadow: 0 2px 16px rgba(255, 255, 255, .92), 0 1px 3px rgba(255, 255, 255, 1);
+  }
+
+  .cover-title h1 {
+    margin: 0;
+    font-size: clamp(30px, 6vw, 56px);
+    font-weight: 800;
+    line-height: 1.08;
+    color: #1d5a70;
+  }
+
+  .cover-title .for-whom {
+    margin-top: .5em;
+    font-size: clamp(15px, 2.4vw, 22px);
+    font-weight: 700;
+    color: #4a7b8a;
+  }
+
+  /* --- Финальная страница --- */
+  .the-end {
+    text-align: center;
+    padding: 44px 28px 48px;
+  }
+  .the-end h2 {
+    font-size: clamp(30px, 5.5vw, 46px);
+    margin: 0 0 .3em;
+    color: var(--accent);
+  }
+  .the-end p {
+    font-size: clamp(18px, 2.5vw, 23px);
+    margin: 0;
+    color: #6b818a;
+  }
+
+  /* --- Навигация --- */
+  .nav {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--cream) 62%, rgba(238, 245, 247, 0));
+  }
+
+  .nav button {
+    font: inherit;
+    font-weight: 800;
+    font-size: 19px;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 999px;
+    padding: 15px 30px;
+    min-width: 128px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 var(--accent-dark);
+    transition: transform .08s ease, box-shadow .08s ease;
+    touch-action: manipulation;
+  }
+  .nav button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 var(--accent-dark);
+  }
+  .nav button:disabled {
+    background: #cfdde1;
+    box-shadow: 0 6px 0 #bccbd0;
+    color: #fff;
+    cursor: default;
+  }
+
+  .counter {
+    font-weight: 700;
+    color: #8aa0a8;
+    min-width: 62px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 480px) {
+    .text { padding: 20px 20px 24px; }
+    .nav button { padding: 14px 20px; min-width: 104px; font-size: 17px; }
+  }
+
+  /* --- Печать: все страницы подряд, по одной на лист --- */
+  @media print {
+    .nav { display: none !important; }
+    body { background: #fff; }
+    .book { max-width: none; padding: 0; }
+    .page {
+      display: block !important;
+      page-break-after: always;
+      break-after: page;
+      animation: none;
+    }
+    .card { box-shadow: none; border-radius: 0; }
+    .text { font-size: 20pt; }
+  }
+</style>
+</head>
+<body>
+
+<div class="book" id="book">
+
+  <section class="page cover is-active">
+    <div class="card">
+      <img src="images/00-cover.png" alt="Максим с малышом-острозубом Чомпером и пятью друзьями в Великой Долине">
+      <div class="cover-title">
+        <h1>Максим и малыш Чомпер</h1>
+        <div class="for-whom">сказка для Максима</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/01-doorframe.png" alt="Максим на цыпочках меряется у дверного косяка">
+      <div class="text">
+        <p>Жил-был мальчик Максим. Ему было почти четыре года.</p>
+        <p>И все взрослые говорили ему одно и то же: «Ты ещё маленький».</p>
+        <p>А Максиму очень-очень хотелось быть большим.</p>
+        <p>Он вставал у двери на цыпочки и тянулся вверх. Но выше не становился.</p>
+        <p><span class="refrain">— Я уже большой! — сказал Максим.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/02-floating-bed.png" alt="Кроватка Максима плывёт по звёздному небу">
+      <div class="text">
+        <p>Вечером Максим лёг спать.</p>
+        <p>И вдруг его кроватка тихонько поплыла. Как лодочка!</p>
+        <p>Мимо звёзд. Мимо облаков.</p>
+        <p>Всё ниже, и ниже, и ниже...</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/03-valley.png" alt="Максим смотрит на огромную зелёную долину с водопадами">
+      <div class="text">
+        <p>Кроватка опустилась на траву — и пропала.</p>
+        <p>А вокруг была огромная зелёная долина. С водопадами. С папоротниками выше дома.</p>
+        <p>— Великая Долина! — прошептал Максим.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/04-five-friends.png" alt="Пятеро динозавриков играют на поляне">
+      <div class="text">
+        <p>На полянке играли пятеро.</p>
+        <p>Длинношеий Литтлфут. Трёхрогая Сера. Большеротая Даки. Летун Петри.</p>
+        <p>И колючехвостый Спайк — он всё время что-то жевал.</p>
+        <p>— Привет! Я Максим!</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/05-youre-small.png" alt="Сера смотрит на Максима сверху вниз, он встаёт на цыпочки">
+      <div class="text">
+        <p>Сера посмотрела на Максима сверху вниз.</p>
+        <p>— А ты какой-то маленький.</p>
+        <p>Максим встал на цыпочки и выпятил грудь:</p>
+        <p><span class="refrain">— Я уже большой!</span></p>
+        <p>Все захихикали. И Максиму стало обидно.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/06-crying.png" alt="Динозаврики пятятся от камней, откуда доносится плач">
+      <div class="text">
+        <p>И вдруг за камнями кто-то заплакал. Тоненько-тоненько:</p>
+        <p><span class="boom">— Ы-ы-ы-ы...</span></p>
+        <p>Пятеро сразу попятились.</p>
+        <p>— Там острозуб! — пискнул Петри. — Маленький. Но острозуб! Мы туда не пойдём.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/07-alone.png" alt="Максим один идёт между огромными камнями">
+      <div class="text">
+        <p>А Максим пошёл. Один.</p>
+        <p>Потому что очень хотел показать, какой он большой.</p>
+        <p><span class="refrain">— Я уже большой, — сказал Максим сам себе.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/08-pit.png" alt="Максим заглядывает в яму, там сидит малыш-острозуб">
+      <div class="text">
+        <p>За камнями была яма. Глубокая!</p>
+        <p>А в яме сидел кроха. Совсем малыш. Фиолетовый, с круглой головой и огромными глазами.</p>
+        <p>— Я Чомпер, — всхлипнул он. — Я упал. И вылезти не могу. И маму потерял.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/09-pulling.png" alt="Максим тянет Чомпера за лапку и не может вытащить">
+      <div class="text">
+        <p>— Не плачь. Я тебя вытащу! — сказал Максим.</p>
+        <p>Он лёг на живот, схватил Чомпера за лапку и потянул.</p>
+        <p>Тянул-тянул. Пыхтел-пыхтел.</p>
+        <p>Но Чомпер был тяжёлый. А Максим — маленький.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/10-stick-breaks.png" alt="Палка ломается, земля осыпается, Чомпер съезжает глубже">
+      <div class="text">
+        <p>Тогда Максим взял палку и сунул её в яму.</p>
+        <p><span class="boom">КР-Р-РАК!</span> Палка сломалась.</p>
+        <p>Земля посыпалась вниз — и Чомпер съехал ещё глубже.</p>
+        <p>— Ой, — сказал Максим. — Я сделал хуже.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/11-shout-help.png" alt="Максим стоит на камне и изо всех сил зовёт на помощь">
+      <div class="text">
+        <p>Максим сел на краешек ямы. Ему было очень стыдно.</p>
+        <p>А потом он встал на камень, набрал полную грудь воздуха и закричал на всю долину:</p>
+        <p><span class="turn">— Я ЕЩЁ МАЛЕНЬКИЙ! ОДИН Я НЕ МОГУ! ПОМОГИ-И-ИТЕ!</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/12-friends-come.png" alt="Пятеро друзей бегут на помощь через холм">
+      <div class="text">
+        <p>И они прибежали. Все пятеро!</p>
+        <p>Литтлфут. Даки. Петри. Спайк.</p>
+        <p>И даже Сера. Хотя ей было страшнее всех.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/13-rescue.png" alt="Динозаврики вместе вытаскивают Чомпера из ямы на лиане">
+      <div class="text">
+        <p>И тут Максим придумал!</p>
+        <p>Петри слетал вниз и отнёс лиану — он же летун!</p>
+        <p>Даки пролезла в узкое и обвязала Чомпера — она маленькая и ловкая!</p>
+        <p>Максим завязал крепкий узел — он умел завязывать!</p>
+        <p>Литтлфут подставил длинную шею. Сера упёрлась рогами. А Спайк сел на конец лианы — он тяжёлый!</p>
+        <p><span class="shout">— Раз-два — ТЯНЕМ!</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/14-chomper-out.png" alt="Чомпер вылезает из ямы весь в земле, все падают от радости">
+      <div class="text">
+        <p>И Чомпер вылез!</p>
+        <p>Весь в земле. Нос в земле. И даже в ушах земля!</p>
+        <p>А все попадали на спину и захохотали.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/15-tiny-voice.png" alt="Маленький Чомпер зовёт маму посреди огромной долины">
+      <div class="text">
+        <p>Но Чомпер опять заплакал:</p>
+        <p>— Я маму зову-зову... А голос у меня маленький. Она не слышит.</p>
+        <p>И правда. Долина была огромная.</p>
+        <p>А голосок — тоненький, как у комарика.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/16-shout-together.png" alt="Все забрались на камень и кричат вместе">
+      <div class="text">
+        <p>И тут Максим придумал ещё раз!</p>
+        <p>— Один голос тихий. А если кричать всем вместе — будет громко!</p>
+        <p>Все забрались на большой камень.</p>
+        <p><span class="shout">— Раз! Два! Три!</span></p>
+        <p><span class="shout">— МА-МА-А-А-А!</span></p>
+        <p><span class="refrain">Вместе они были очень громкие!</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/17-mother.png" alt="Огромная мама-острозуб наклоняется к своему малышу">
+      <div class="text">
+        <p>И земля загудела. <span class="boom">Топ. Топ. ТОП!</span></p>
+        <p>Из-за деревьев вышла мама Чомпера. Огромная-преогромная.</p>
+        <p>Все зажмурились...</p>
+        <p>А она наклонилась, обняла своего малыша и сказала тихо-тихо:</p>
+        <p>— Спасибо вам.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/18-tooth-gift.png" alt="Чомпер дарит Максиму свой выпавший зубик">
+      <div class="text">
+        <p>Сера подошла к Максиму и сказала:</p>
+        <p>— Ты не маленький.</p>
+        <p>А Литтлфут добавил:</p>
+        <p>— Большой — это не про рост. Большой — это когда зовёшь на помощь и не бросаешь своих.</p>
+        <p>Тут прибежал Чомпер и протянул Максиму маленький белый зубик:</p>
+        <p>— Это мой! Он выпал. Возьми на память.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <img src="images/19-morning.png" alt="Утром Максим стоит у косяка и смотрит на зубик в ладошке">
+      <div class="text">
+        <p>Утром Максим проснулся в своей кроватке.</p>
+        <p>Он подошёл к двери и встал у косяка.</p>
+        <p>Только на цыпочки вставать не стал.</p>
+        <p>А в кулаке у него лежал маленький белый зубик.</p>
+        <p>Максим улыбнулся.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="card">
+      <div class="the-end">
+        <h2>Конец</h2>
+        <p>Спокойной ночи, Максим!</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<nav class="nav">
+  <button id="prev" type="button">Назад</button>
+  <span class="counter" id="counter"></span>
+  <button id="next" type="button">Дальше</button>
+</nav>
+
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const counter = document.getElementById('counter');
+  let current = 0;
+
+  function show(index) {
+    current = Math.max(0, Math.min(index, pages.length - 1));
+    pages.forEach((page, i) => page.classList.toggle('is-active', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === pages.length - 1;
+    counter.textContent = current + ' / ' + (pages.length - 1);
+    window.scrollTo({ top: 0, behavior: 'instant' in document.documentElement.style ? 'instant' : 'auto' });
+    if (location.hash !== '#' + current) {
+      history.replaceState(null, '', '#' + current);
+    }
+  }
+
+  prevBtn.addEventListener('click', () => show(current - 1));
+  nextBtn.addEventListener('click', () => show(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(current - 1); }
+  });
+
+  let touchStartX = null;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) { show(current + (dx < 0 ? 1 : -1)); }
+    touchStartX = null;
+  }, { passive: true });
+
+  const fromHash = parseInt(location.hash.slice(1), 10);
+  show(Number.isInteger(fromHash) ? fromHash : 0);
+</script>
+
+</body>
+</html>
